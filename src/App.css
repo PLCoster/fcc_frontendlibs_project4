@@ -3,6 +3,12 @@
   min-height: 100vh;
 }
 
+.calculator-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 /* .App-header {
   background-color: #282c34;
   min-height: 100vh;
