@@ -1,5 +1,14 @@
 .buttons-display {
   width: 100%;
+  font-weight: 600;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+}
+
+.buttons-display button {
+}
+
+button.equals {
+  grid-row: 5;
+  grid-column: 4 / 6;
 }

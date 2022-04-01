@@ -24,18 +24,20 @@ const buttonInfo = [
   { val: '+/-', id: 'negative', handler: 'handleNegativePress' },
   { val: '0', id: 'zero', handler: 'handleNumberPress' },
   { val: '.', id: 'decimal', handler: 'handleDecimalPress' },
-  { val: '=', id: 'equals', handler: 'handleEqualPress' },
+  { val: '=', id: 'equals', handler: 'handleEqualPress', className: 'equals' },
 ];
 
-function ButtonsDisplay({ handlers }) {
-  const buttons = buttonInfo.map(({ val, id, handler }) => {
+function ButtonsDisplay({ keyPressed, handlers, syntaxError }) {
+  console.log('Button Display');
+  const buttons = buttonInfo.map(({ val, id, handler, className }) => {
     return (
       <button
         id={id}
         key={id}
+        className={className}
         onClick={() => {
-          console.log(id, 'clicked');
-          handlers[handler](val);
+          console.log(id, 'clicked', syntaxError);
+          syntaxError ? handlers.handleAllClearPress() : handlers[handler](val);
         }}
       >
         {val}

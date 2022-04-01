@@ -15,10 +15,12 @@ function Calculator() {
 
   const [keyPressed, setKeyPressed] = useState('');
 
+  const [syntaxError, setSyntaxError] = useState(false);
+
   // Handler for number button press
   const handleNumberPress = (val) => {
     console.log('Number clicked: ', val);
-    const maxLength = 16;
+    const maxLength = 21;
     if (number === '0') {
       setNumber(val);
     } else if (number.length < maxLength) {
@@ -59,10 +61,11 @@ function Calculator() {
   // Handler for AC button press
   const handleAllClearPress = () => {
     // Reset all state to initial settings:
+    console.log('ALL CLEAR');
     setFormula('');
     setNumOpenParens(0);
-
     handleClearEntryPress();
+    setSyntaxError(false);
   };
 
   // Handler for CE button press
@@ -122,6 +125,8 @@ function Calculator() {
 
   // Handler to evaluate result of current formula when equals button is pressed
   const handleEqualPress = () => {
+    // Update formula if required:
+    updateFormula('');
     // If we have entered a number then add it to the formula:
     let finalFormulaChars = '';
     if (numberPressed && !formula.endsWith(')')) {
@@ -145,21 +150,23 @@ function Calculator() {
     );
     console.log('Trying to evaluate: ', toEvaluate);
     if (toEvaluate) {
+      updateFormula(finalFormulaChars + ' =');
+      setFormulaClearNextUpdate(true);
+      setNumberPressed(true);
       try {
         const result = eval(toEvaluate);
         console.log('Raw result is: ', result);
-        updateFormula(finalFormulaChars + ' =');
         setNumber(result.toString());
-        setNumberPressed(true);
-        setFormulaClearNextUpdate(true);
       } catch (err) {
         setNumber('Syntax Error');
+        setSyntaxError(true);
       }
     }
   };
 
   // Helper function to format current entered number for adding to formula:
   const formatNumberForFormula = () => {
+    // const safeNumber = number === 'Syntax Error' ? '0' : number;
     const extraSpace = formula.endsWith('(') ? '' : ' ';
     const formulaNumber = number[0] === '-' ? '(' + number + ')' : number;
 
@@ -206,7 +213,9 @@ function Calculator() {
 
   // UseEffect for when pressed keyboard key changes
   useEffect(() => {
-    if (
+    if (keyPressed && syntaxError) {
+      handleAllClearPress();
+    } else if (
       ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(keyPressed)
     ) {
       handleNumberPress(keyPressed);
@@ -239,6 +248,7 @@ function Calculator() {
         {/* Calculator Buttons */}
         <ButtonsDisplay
           keyPressed={keyPressed}
+          syntaxError={syntaxError}
           handlers={{
             handleNumberPress,
             handleDecimalPress,
