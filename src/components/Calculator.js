@@ -97,7 +97,7 @@ function Calculator() {
         updateFormula(opString);
       } else if (
         opString !== '-' &&
-        ['÷', '×', '+'].includes(formula[formula.length - 2])
+        ['÷', '×', '+', '^'].includes(formula[formula.length - 2])
       ) {
         // Dealing with / * + operations when formula ends with e.g. +- / *- / /-
         updateFormula(opString, true, 2);
@@ -129,7 +129,7 @@ function Calculator() {
 
     // Evaluate the result of the final formula after replacing JS operators:
     const toEvaluate = (formula + finalFormulaChars).replace(
-      /×|÷/g,
+      /×|÷|\^/g,
       (match) => {
         if (match === '×') return '*';
         if (match === '÷') return '/';
