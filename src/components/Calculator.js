@@ -13,6 +13,8 @@ function Calculator() {
   const [decimal, setDecimal] = useState(false);
   const [numberPressed, setNumberPressed] = useState(false);
 
+  const [keyPressed, setKeyPressed] = useState('');
+
   // Handler for number button press
   const handleNumberPress = (val) => {
     console.log('Number clicked: ', val);
@@ -24,10 +26,6 @@ function Calculator() {
     }
     setNumberPressed(true);
   };
-
-  useEffect(() => {
-    console.log('Number updated to: ', number);
-  }, [number]);
 
   // Handler for decimal point button press
   const handleDecimalPress = () => {
@@ -187,6 +185,46 @@ function Calculator() {
     setFormula(newFormula);
   };
 
+  useEffect(() => {
+    const keyDownEventListener = ({ key }) => {
+      setKeyPressed(key);
+    };
+
+    const keyUpEventListener = () => {
+      setKeyPressed('');
+    };
+
+    document.addEventListener('keydown', keyDownEventListener);
+    document.addEventListener('keyup', keyUpEventListener);
+
+    // Return function to remove eventListener on cleanup:
+    return () => {
+      document.removeEventListener('keydown', keyDownEventListener);
+      document.removeEventListener('keyup', keyUpEventListener);
+    };
+  }, []);
+
+  // UseEffect for when pressed keyboard key changes
+  useEffect(() => {
+    if (
+      ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(keyPressed)
+    ) {
+      handleNumberPress(keyPressed);
+    } else if (['+', '-', '*', '/', '^'].includes(keyPressed)) {
+      handleOperationPress(keyPressed);
+    } else if (keyPressed === '.') {
+      handleDecimalPress();
+    } else if (['(', ')'].includes(keyPressed)) {
+      handleParensPress(keyPressed);
+    } else if (['=', 'Enter'].includes(keyPressed)) {
+      handleEqualPress();
+    } else if (['Delete', 'Backspace'].includes(keyPressed)) {
+      handleDeletePress();
+    } else if (keyPressed === 'Escape') {
+      handleAllClearPress();
+    }
+  }, [keyPressed]);
+
   return (
     <>
       <div className="calculator-body">
@@ -200,6 +238,7 @@ function Calculator() {
 
         {/* Calculator Buttons */}
         <ButtonsDisplay
+          keyPressed={keyPressed}
           handlers={{
             handleNumberPress,
             handleDecimalPress,
