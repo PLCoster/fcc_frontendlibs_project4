@@ -91,13 +91,22 @@ function Calculator() {
     // If formula ends with closing parenthesis, then add the operation to formula
     if (formula.endsWith(')')) {
       updateFormula(opString);
-    } else if (
-      !numberPressed &&
-      ['÷', '×', '+', '-'].includes(formula[formula.length - 1])
-    ) {
-      // If the last character in the formula is an operation, swap it:
-      updateFormula(opString, true);
+    } else if (!numberPressed) {
+      // Handle using subtract symbol to make number entry negative:
+      if (opString === '-' && !formula.endsWith('-')) {
+        updateFormula(opString);
+      } else if (
+        opString !== '-' &&
+        ['÷', '×', '+'].includes(formula[formula.length - 2])
+      ) {
+        // Dealing with / * + operations when formula ends with e.g. +- / *- / /-
+        updateFormula(opString, true, 2);
+      } else if (opString !== '-') {
+        // Replacing the previous operator if a new operator is pressed
+        updateFormula(opString, true);
+      }
     } else {
+      // We have entered a number into the calculator,
       // Add current number and opString to formula, clear number input
       const formulaNumber = number[0] === '-' ? '(' + number + ')' : number;
       updateFormula(formulaNumber + opString);
@@ -138,7 +147,7 @@ function Calculator() {
   };
 
   // Helper function to control updates to formula state
-  const updateFormula = (charsToAdd, replace = false) => {
+  const updateFormula = (charsToAdd, replace = false, numToReplace = 1) => {
     console.log('Trying to update formula: ', formula, charsToAdd);
     let newFormula = formula;
     if (formulaClearNextUpdate) {
@@ -147,7 +156,8 @@ function Calculator() {
     }
 
     if (replace) {
-      newFormula = newFormula.slice(0, newFormula.length - 1) + charsToAdd;
+      newFormula =
+        newFormula.slice(0, newFormula.length - numToReplace) + charsToAdd;
     } else {
       newFormula += charsToAdd;
     }
