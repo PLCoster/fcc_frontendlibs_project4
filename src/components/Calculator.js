@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import './Calculator.css';
 
@@ -7,21 +7,29 @@ import ButtonsDisplay from './ButtonsDisplay';
 function Calculator() {
   const [formula, setFormula] = useState('');
   const [numOpenParens, setNumOpenParens] = useState(0);
+  const [formulaClearNextUpdate, setFormulaClearNextUpdate] = useState(false);
 
   const [number, setNumber] = useState('0');
   const [decimal, setDecimal] = useState(false);
+  const [numberPressed, setNumberPressed] = useState(false);
 
-  // Helper function to update number when a number button is pressed
+  // Handler for number button press
   const handleNumberPress = (val) => {
+    console.log('Number clicked: ', val);
     const maxLength = 16;
     if (number === '0') {
       setNumber(val);
     } else if (number.length < maxLength) {
       setNumber(number + val);
     }
+    setNumberPressed(true);
   };
 
-  // Helper function to convert number to decimal when point is pressed
+  useEffect(() => {
+    console.log('Number updated to: ', number);
+  }, [number]);
+
+  // Handler for decimal point button press
   const handleDecimalPress = () => {
     if (!decimal) {
       setDecimal(true);
@@ -29,37 +37,44 @@ function Calculator() {
     }
   };
 
-  // Helper function to convert input number between positive / negative
+  // Handler for positive / negative button press
   const handleNegativePress = () => {
     if (number[0] === '-') {
       setNumber(number.slice(1));
-    } else {
+    } else if (number !== '0') {
       setNumber('-' + number);
     }
   };
 
-  // Helper function to handle parens button presses
+  // Handler for parens button presses
   const handleParensPress = (val) => {
     if (val === '(') {
-      setFormula(formula + '(');
+      updateFormula('(');
       setNumOpenParens(numOpenParens + 1);
     } else if (numOpenParens > 0) {
-      setFormula(formula + ')');
+      updateFormula(number + ')');
       setNumOpenParens(numOpenParens - 1);
+      handleClearEntryPress();
     }
   };
 
-  // Helper function to handle AC button press
+  // Handler for AC button press
   const handleAllClearPress = () => {
     // Reset all state to initial settings:
     setFormula('');
     setNumOpenParens(0);
 
-    setNumber('0');
-    setDecimal(false);
+    handleClearEntryPress();
   };
 
-  // Helper function to handle Delete button press
+  // Handler for CE button press
+  const handleClearEntryPress = () => {
+    setNumber('0');
+    setDecimal(false);
+    setNumberPressed(false);
+  };
+
+  // Handler for Delete button press
   const handleDeletePress = () => {
     const removed = formula[formula.length - 1];
     if (removed === '(') {
@@ -68,7 +83,76 @@ function Calculator() {
       setNumOpenParens(numOpenParens + 1);
     }
 
-    setFormula(formula.slice(0, formula.length - 1));
+    updateFormula('', true);
+  };
+
+  // Handler when Operation buttons are pressed
+  const handleOperationPress = (opString) => {
+    // If formula ends with closing parenthesis, then add the operation to formula
+    if (formula.endsWith(')')) {
+      updateFormula(opString);
+    } else if (
+      !numberPressed &&
+      ['÷', '×', '+', '-'].includes(formula[formula.length - 1])
+    ) {
+      // If the last character in the formula is an operation, swap it:
+      updateFormula(opString, true);
+    } else {
+      // Add current number and opString to formula, clear number input
+      const formulaNumber = number[0] === '-' ? '(' + number + ')' : number;
+      updateFormula(formulaNumber + opString);
+      handleClearEntryPress();
+    }
+  };
+
+  // Handler to evaluate result of current formula when equals button is pressed
+  const handleEqualPress = () => {
+    // If we have entered a number then add it to the formula:
+    let finalFormulaChars = '';
+    if (numberPressed && !formula.endsWith(')')) {
+      finalFormulaChars += number;
+    }
+
+    // Balance out any remaining closing parens in formula:
+    if (numOpenParens) {
+      finalFormulaChars += ')'.repeat(numOpenParens);
+    }
+
+    // Evaluate the result of the final formula after replacing JS operators:
+    const toEvaluate = (formula + finalFormulaChars).replace(
+      /×|÷/g,
+      (match) => {
+        if (match === '×') return '*';
+        if (match === '÷') return '/';
+        if (match === '^') return '**';
+      }
+    );
+    console.log('Trying to evaluate: ', toEvaluate);
+    if (toEvaluate) {
+      const result = eval(toEvaluate).toString().slice(0, 16);
+      setNumber(result);
+      updateFormula(finalFormulaChars + '=');
+      setNumberPressed(true);
+      setFormulaClearNextUpdate(true);
+    }
+  };
+
+  // Helper function to control updates to formula state
+  const updateFormula = (charsToAdd, replace = false) => {
+    console.log('Trying to update formula: ', formula, charsToAdd);
+    let newFormula = formula;
+    if (formulaClearNextUpdate) {
+      newFormula = '';
+      setFormulaClearNextUpdate(false);
+    }
+
+    if (replace) {
+      newFormula = newFormula.slice(0, newFormula.length - 1) + charsToAdd;
+    } else {
+      newFormula += charsToAdd;
+    }
+
+    setFormula(newFormula);
   };
 
   return (
@@ -90,7 +174,10 @@ function Calculator() {
             handleNegativePress,
             handleParensPress,
             handleAllClearPress,
+            handleClearEntryPress,
             handleDeletePress,
+            handleOperationPress,
+            handleEqualPress,
           }}
         />
       </div>
