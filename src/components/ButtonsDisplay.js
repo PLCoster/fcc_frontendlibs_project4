@@ -10,7 +10,7 @@ const buttonInfo = [
   { val: '8', id: 'eight', handler: 'handleNumberPress' },
   { val: '9', id: 'nine', handler: 'handleNumberPress' },
   { val: '^', id: 'power', handler: 'handleOperationPress' },
-  { val: 'SPARE', id: 'SPARE', handler: 'SPARE' },
+  { val: 'ln', id: 'log', handler: 'handleLogPress' },
   { val: '4', id: 'four', handler: 'handleNumberPress' },
   { val: '5', id: 'five', handler: 'handleNumberPress' },
   { val: '6', id: 'six', handler: 'handleNumberPress' },

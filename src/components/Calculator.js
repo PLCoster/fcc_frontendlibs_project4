@@ -49,10 +49,10 @@ function Calculator() {
   // Handler for parens button presses
   const handleParensPress = (val) => {
     if (val === '(') {
-      updateFormula('(');
+      updateFormula(' (');
       setNumOpenParens(numOpenParens + 1);
     } else if (numOpenParens > 0) {
-      updateFormula(number + ')');
+      updateFormula(formatNumberForFormula() + ')');
       setNumOpenParens(numOpenParens - 1);
       handleClearEntryPress();
     }
@@ -90,28 +90,36 @@ function Calculator() {
   const handleOperationPress = (opString) => {
     // If formula ends with closing parenthesis, then add the operation to formula
     if (formula.endsWith(')')) {
-      updateFormula(opString);
+      updateFormula(' ' + opString);
     } else if (!numberPressed) {
-      // Handle using subtract symbol to make number entry negative:
+      // If we haven't entered a number yet
       if (opString === '-' && !formula.endsWith('-')) {
-        updateFormula(opString);
+        // Handle using subtract symbol to make number entry negative:
+        updateFormula(' ' + opString);
       } else if (
         opString !== '-' &&
-        ['÷', '×', '+', '^'].includes(formula[formula.length - 2])
+        ['÷', '×', '+', '^'].includes(formula[formula.length - 3])
       ) {
         // Dealing with / * + operations when formula ends with e.g. +- / *- / /-
-        updateFormula(opString, true, 2);
-      } else if (opString !== '-') {
+        updateFormula(opString, true, 3);
+      } else if (
+        opString !== '-' &&
+        ['÷', '×', '+', '^'].includes(formula[formula.length - 1])
+      ) {
         // Replacing the previous operator if a new operator is pressed
         updateFormula(opString, true);
       }
     } else {
       // We have entered a number into the calculator,
       // Add current number and opString to formula, clear number input
-      const formulaNumber = number[0] === '-' ? '(' + number + ')' : number;
-      updateFormula(formulaNumber + opString);
+      updateFormula(formatNumberForFormula() + ' ' + opString);
       handleClearEntryPress();
     }
+  };
+
+  const handleLogPress = () => {
+    updateFormula(` ln(${number})`);
+    handleClearEntryPress();
   };
 
   // Handler to evaluate result of current formula when equals button is pressed
@@ -119,7 +127,7 @@ function Calculator() {
     // If we have entered a number then add it to the formula:
     let finalFormulaChars = '';
     if (numberPressed && !formula.endsWith(')')) {
-      finalFormulaChars += number;
+      finalFormulaChars += formatNumberForFormula();
     }
 
     // Balance out any remaining closing parens in formula:
@@ -129,21 +137,35 @@ function Calculator() {
 
     // Evaluate the result of the final formula after replacing JS operators:
     const toEvaluate = (formula + finalFormulaChars).replace(
-      /×|÷|\^/g,
+      /×|÷|\^|ln/g,
       (match) => {
         if (match === '×') return '*';
         if (match === '÷') return '/';
         if (match === '^') return '**';
+        if (match === 'ln') return 'Math.log';
       }
     );
     console.log('Trying to evaluate: ', toEvaluate);
     if (toEvaluate) {
-      const result = eval(toEvaluate).toString().slice(0, 16);
-      setNumber(result);
-      updateFormula(finalFormulaChars + '=');
-      setNumberPressed(true);
-      setFormulaClearNextUpdate(true);
+      try {
+        const result = eval(toEvaluate);
+        console.log('Raw result is: ', result);
+        updateFormula(finalFormulaChars + ' =');
+        setNumber(result.toString());
+        setNumberPressed(true);
+        setFormulaClearNextUpdate(true);
+      } catch (err) {
+        setNumber('Syntax Error');
+      }
     }
+  };
+
+  // Helper function to format current entered number for adding to formula:
+  const formatNumberForFormula = () => {
+    const extraSpace = formula.endsWith('(') ? '' : ' ';
+    const formulaNumber = number[0] === '-' ? '(' + number + ')' : number;
+
+    return extraSpace + formulaNumber;
   };
 
   // Helper function to control updates to formula state
@@ -187,6 +209,7 @@ function Calculator() {
             handleClearEntryPress,
             handleDeletePress,
             handleOperationPress,
+            handleLogPress,
             handleEqualPress,
           }}
         />

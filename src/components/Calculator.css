@@ -1,5 +1,5 @@
 .calculator-body {
-  width: 400px;
+  width: 500px;
   height: 600px;
   padding: 15px;
   background-color: #c8c7cc;
@@ -25,5 +25,5 @@
 
 .number-display {
   text-align: end;
-  font-size: 40px;
+  font-size: 35px;
 }
