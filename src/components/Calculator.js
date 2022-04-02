@@ -192,8 +192,16 @@ function Calculator() {
     setFormula(newFormula);
   };
 
+  // Add window event listener for key presses
   useEffect(() => {
     const keyDownEventListener = ({ key }) => {
+      if (key === 'Enter') {
+        key = '=';
+      }
+
+      if (key === 'Backspace') {
+        key = 'Delete';
+      }
       setKeyPressed(key);
     };
 
