@@ -1,14 +1,86 @@
 .buttons-display {
+  margin-top: 20px;
   width: 100%;
-  font-weight: 600;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 40px;
+  gap: 5px;
 }
 
 .buttons-display button {
+  color: #e7e9ec;
+  border: none;
+  border-radius: 5px;
 }
 
-button.equals {
-  grid-row: 5;
+.buttons-display button h5 {
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+/* NUMBER BUTTON STYLES */
+
+.buttons-display button.number {
+  color: #e7e9ec;
+  background-color: #3c4043;
+}
+
+.buttons-display button.number:active,
+.buttons-display button.number.active {
+  color: #2d333e;
+  background-color: #8ab4f8;
+}
+
+.buttons-display button.number:hover {
+  background-color: #54595e;
+}
+
+/* EQUAL BUTTON STYLES */
+
+.buttons-display button.equals {
+  color: #2d333e;
+  background-color: #8ab4f8;
   grid-column: 4 / 6;
+}
+
+.buttons-display button.equals:active,
+.buttons-display button.equals.active {
+  background-color: #698abe;
+}
+
+.buttons-display button.equals:hover {
+  background-color: #a8c9ff;
+}
+
+/* OPERATOR BUTTON STYLES */
+
+.buttons-display button.operator {
+  color: #e7e9ec;
+  background-color: #5f6368;
+}
+
+.buttons-display button.operator:active,
+.buttons-display button.operator.active {
+  color: #2d333e;
+  background-color: #8ab4f8;
+}
+
+.buttons-display button.operator:hover {
+  background-color: #80858b;
+}
+
+/* WARNING BUTTON STYLES */
+
+.buttons-display button.warning {
+  color: #2d333e;
+  background-color: #f87a25;
+}
+
+.buttons-display button.warning:active,
+.buttons-display button.warning.active {
+  background-color: #fd6805;
+}
+
+.buttons-display button.warning:hover {
+  background-color: #f8914c;
 }
