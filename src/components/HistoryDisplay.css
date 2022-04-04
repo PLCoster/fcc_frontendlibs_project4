@@ -1,0 +1,24 @@
+.history-container {
+  color: #e7e9ec;
+  height: 200px;
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.history-item {
+  border-top: 1px solid #e7e9ec;
+  text-align: right;
+}
+
+.history-item:hover {
+  background-color: #3b414d;
+  cursor: pointer;
+}
+
+.history-result {
+  font-size: 20px;
+  font-weight: 600;
+}

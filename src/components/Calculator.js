@@ -167,10 +167,7 @@ function Calculator() {
         const result = eval(toEvaluate).toString();
         console.log('Raw result is: ', result);
         setNumber(result);
-        setHistory([
-          ...history,
-          { formula: formula + finalFormulaChars, result },
-        ]);
+        updateHistory(formulaString + finalFormulaChars, result);
       } catch (err) {
         setNumber('Syntax Error');
         setSyntaxError(true);
@@ -204,6 +201,19 @@ function Calculator() {
     }
 
     setFormula(newFormula);
+  };
+
+  // Helper function to update calculator history
+  const updateHistory = (newFormula, result) => {
+    console.log('Updating History: ', newFormula);
+    const lastFormula = history.length ? history[0].formula : '';
+    // Only add history item if different from the most recent history item
+    if (lastFormula !== newFormula) {
+      setHistory([
+        { formula: newFormula, result: result, key: history.length + 1 },
+        ...history,
+      ]);
+    }
   };
 
   // Add window event listener for key presses
@@ -285,7 +295,7 @@ function Calculator() {
           }}
         />
       </div>
-      <HistoryDisplay />
+      <HistoryDisplay history={history} />
     </>
   );
 }
