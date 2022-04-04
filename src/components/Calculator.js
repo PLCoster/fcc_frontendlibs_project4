@@ -225,6 +225,11 @@ function Calculator() {
     setNumberPressed(true);
   };
 
+  // Handler to clear history on trash icon click
+  const handleHistoryClear = () => {
+    setHistory([]);
+  };
+
   // Add window event listener for key presses
   useEffect(() => {
     const keyDownEventListener = ({ key }) => {
@@ -307,6 +312,7 @@ function Calculator() {
       <HistoryDisplay
         history={history}
         handleHistoryClick={handleHistoryClick}
+        handleHistoryClear={handleHistoryClear}
       />
     </>
   );

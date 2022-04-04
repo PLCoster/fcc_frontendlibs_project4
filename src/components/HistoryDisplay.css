@@ -7,6 +7,23 @@
   flex-direction: column;
 }
 
+.history-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.history-header svg {
+  margin-bottom: 8px;
+}
+
+.history-header svg:hover {
+  margin-bottom: 8px;
+  color: #bbbcbe;
+  cursor: pointer;
+}
+
 .history-item-container {
   height: 170px;
   overflow: auto;

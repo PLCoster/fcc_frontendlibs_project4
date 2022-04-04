@@ -1,6 +1,9 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+
 import './HistoryDisplay.css';
 
-function HistoryDisplay({ history, handleHistoryClick }) {
+function HistoryDisplay({ history, handleHistoryClick, handleHistoryClear }) {
   console.log('HistoryDisplay');
   const historyList = history.map(({ formula, result, key }) => {
     return (
@@ -16,7 +19,11 @@ function HistoryDisplay({ history, handleHistoryClick }) {
   });
   return (
     <div className="history-display">
-      <h5>History:</h5>
+      <div className="history-header">
+        <h5>History:</h5>
+        <FontAwesomeIcon icon={faTrashCan} onClick={handleHistoryClear} />
+      </div>
+
       <div className="history-item-container">{historyList}</div>
     </div>
   );
