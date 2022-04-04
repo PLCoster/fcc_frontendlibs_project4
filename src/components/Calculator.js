@@ -216,6 +216,15 @@ function Calculator() {
     }
   };
 
+  // Handler to load calculation from history into calculator
+  const handleHistoryClick = (historyFormula, historyResult) => {
+    setNumber(historyResult);
+    setNumberClearNextUpdate(true);
+    setFormula(historyFormula);
+    setFormulaClearNextUpdate(true);
+    setNumberPressed(true);
+  };
+
   // Add window event listener for key presses
   useEffect(() => {
     const keyDownEventListener = ({ key }) => {
@@ -295,7 +304,10 @@ function Calculator() {
           }}
         />
       </div>
-      <HistoryDisplay history={history} />
+      <HistoryDisplay
+        history={history}
+        handleHistoryClick={handleHistoryClick}
+      />
     </>
   );
 }

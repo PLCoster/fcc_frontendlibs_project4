@@ -1,19 +1,23 @@
 import './HistoryDisplay.css';
 
-function HistoryDisplay({ history }) {
+function HistoryDisplay({ history, handleHistoryClick }) {
   console.log('HistoryDisplay');
   const historyList = history.map(({ formula, result, key }) => {
     return (
-      <div className="history-item" key={key}>
+      <div
+        className="history-item"
+        key={key}
+        onClick={() => handleHistoryClick(formula + ' =', result)}
+      >
         <div>{formula + ' ='}</div>
         <div className="history-result">{result}</div>
       </div>
     );
   });
   return (
-    <div className="history-container">
+    <div className="history-display">
       <h5>History:</h5>
-      {historyList}
+      <div className="history-item-container">{historyList}</div>
     </div>
   );
 }
