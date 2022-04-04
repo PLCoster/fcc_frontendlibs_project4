@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './Calculator.css';
 
 import ButtonsDisplay from './ButtonsDisplay';
+import HistoryDisplay from './HistoryDisplay';
 
 function Calculator() {
   const [formula, setFormula] = useState('');
@@ -12,17 +13,21 @@ function Calculator() {
   const [number, setNumber] = useState('0');
   const [decimal, setDecimal] = useState(false);
   const [numberPressed, setNumberPressed] = useState(false);
+  const [numberClearNextUpdate, setNumberClearNextUpdate] = useState(false);
 
   const [keyPressed, setKeyPressed] = useState('');
 
   const [syntaxError, setSyntaxError] = useState(false);
 
+  const [history, setHistory] = useState([]);
+
   // Handler for number button press
   const handleNumberPress = (val) => {
     console.log('Number clicked: ', val);
     const maxLength = 21;
-    if (number === '0') {
+    if (number === '0' || numberClearNextUpdate) {
       setNumber(val);
+      setNumberClearNextUpdate(false);
     } else if (number.length < maxLength) {
       setNumber(number + val);
     }
@@ -125,8 +130,12 @@ function Calculator() {
 
   // Handler to evaluate result of current formula when equals button is pressed
   const handleEqualPress = () => {
-    // Update formula if required:
-    updateFormula('');
+    // If we should clear the formula on the next key press, start with emtpy formula:
+    let formulaString = formula;
+    if (formulaClearNextUpdate) {
+      formulaString = '';
+    }
+
     // If we have entered a number then add it to the formula:
     let finalFormulaChars = '';
     if (numberPressed && !formula.endsWith(')')) {
@@ -139,7 +148,7 @@ function Calculator() {
     }
 
     // Evaluate the result of the final formula after replacing JS operators:
-    const toEvaluate = (formula + finalFormulaChars).replace(
+    const toEvaluate = (formulaString + finalFormulaChars).replace(
       /×|÷|\^|ln/g,
       (match) => {
         if (match === '×') return '*';
@@ -152,11 +161,16 @@ function Calculator() {
     if (toEvaluate) {
       updateFormula(finalFormulaChars + ' =');
       setFormulaClearNextUpdate(true);
+      setNumberClearNextUpdate(true);
       setNumberPressed(true);
       try {
-        const result = eval(toEvaluate);
+        const result = eval(toEvaluate).toString();
         console.log('Raw result is: ', result);
-        setNumber(result.toString());
+        setNumber(result);
+        setHistory([
+          ...history,
+          { formula: formula + finalFormulaChars, result },
+        ]);
       } catch (err) {
         setNumber('Syntax Error');
         setSyntaxError(true);
@@ -271,6 +285,7 @@ function Calculator() {
           }}
         />
       </div>
+      <HistoryDisplay />
     </>
   );
 }
