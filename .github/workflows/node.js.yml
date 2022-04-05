@@ -33,6 +33,6 @@ jobs:
           CI: ''
 
       - name: Tests have succeeded, deploy to github pages
-        run: npm deploy
+        run: npm run deploy
         env:
           CI: ''
