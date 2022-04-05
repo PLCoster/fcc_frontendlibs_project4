@@ -266,7 +266,13 @@ function Calculator() {
     ) {
       handleNumberPress(keyPressed);
     } else if (['+', '-', '*', '/', '^'].includes(keyPressed)) {
-      handleOperationPress(keyPressed);
+      if (keyPressed === '*') {
+        handleOperationPress('×');
+      } else if (keyPressed === '/') {
+        handleOperationPress('÷');
+      } else {
+        handleOperationPress(keyPressed);
+      }
     } else if (keyPressed === '.') {
       handleDecimalPress();
     } else if (['(', ')'].includes(keyPressed)) {
@@ -285,8 +291,14 @@ function Calculator() {
       <div className="calculator-body">
         {/* Calculator Display */}
         <div className="display-panel">
-          <div className="formula-display">{formula}</div>
-          <div className="number-display" id="display">
+          <div className="formula-display" data-testid="formula-display">
+            {formula}
+          </div>
+          <div
+            className="number-display"
+            id="display"
+            data-testid="number-display"
+          >
             {number}
           </div>
         </div>
