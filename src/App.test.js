@@ -410,7 +410,6 @@ describe('history display functions corrrectly', () => {
   test('History display is rendered by App', () => {
     const buttons = initializeApp();
     const historyDisplay = screen.getByText('History:');
-    console.log('HISTORY DISPLAY: ', historyDisplay.nextSibling);
     expect(historyDisplay).toBeInTheDocument();
   });
 

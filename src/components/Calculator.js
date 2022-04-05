@@ -23,7 +23,6 @@ function Calculator() {
 
   // Handler for number button press
   const handleNumberPress = (val) => {
-    console.log('Number clicked: ', val);
     const maxLength = 21;
     if (number === '0' || numberClearNextUpdate) {
       setNumber(val);
@@ -66,7 +65,6 @@ function Calculator() {
   // Handler for AC button press
   const handleAllClearPress = () => {
     // Reset all state to initial settings:
-    console.log('ALL CLEAR');
     setFormula('');
     setNumOpenParens(0);
     handleClearEntryPress();
@@ -157,7 +155,6 @@ function Calculator() {
         if (match === 'ln') return 'Math.log';
       }
     );
-    console.log('Trying to evaluate: ', toEvaluate);
     if (toEvaluate) {
       updateFormula(finalFormulaChars + ' =');
       setFormulaClearNextUpdate(true);
@@ -165,7 +162,6 @@ function Calculator() {
       setNumberPressed(true);
       try {
         const result = eval(toEvaluate).toString();
-        console.log('Raw result is: ', result);
         setNumber(result);
         updateHistory(formulaString + finalFormulaChars, result);
       } catch (err) {
@@ -186,7 +182,6 @@ function Calculator() {
 
   // Helper function to control updates to formula state
   const updateFormula = (charsToAdd, replace = false, numToReplace = 1) => {
-    console.log('Trying to update formula: ', formula, charsToAdd);
     let newFormula = formula;
     if (formulaClearNextUpdate) {
       newFormula = '';
@@ -205,7 +200,6 @@ function Calculator() {
 
   // Helper function to update calculator history
   const updateHistory = (newFormula, result) => {
-    console.log('Updating History: ', newFormula);
     const lastFormula = history.length ? history[0].formula : '';
     // Only add history item if different from the most recent history item
     if (lastFormula !== newFormula) {

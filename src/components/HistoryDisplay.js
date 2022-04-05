@@ -4,7 +4,6 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import './HistoryDisplay.css';
 
 function HistoryDisplay({ history, handleHistoryClick, handleHistoryClear }) {
-  console.log('HistoryDisplay');
   const historyList = history.map(({ formula, result, key }) => {
     return (
       <div

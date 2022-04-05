@@ -100,7 +100,6 @@ function ButtonsDisplay({ keyPressed, handlers, syntaxError }) {
         key={id}
         className={className + activeClass}
         onClick={() => {
-          console.log(id, 'clicked', syntaxError);
           syntaxError ? handlers.handleAllClearPress() : handlers[handler](val);
         }}
       >
