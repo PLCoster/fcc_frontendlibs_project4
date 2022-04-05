@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/fcc_frontendlibs_project4/static/css/main.40ca3353.css",
+    "main.js": "/fcc_frontendlibs_project4/static/js/main.da443409.js",
+    "static/js/787.4931ef9a.chunk.js": "/fcc_frontendlibs_project4/static/js/787.4931ef9a.chunk.js",
+    "index.html": "/fcc_frontendlibs_project4/index.html",
+    "main.40ca3353.css.map": "/fcc_frontendlibs_project4/static/css/main.40ca3353.css.map",
+    "main.da443409.js.map": "/fcc_frontendlibs_project4/static/js/main.da443409.js.map",
+    "787.4931ef9a.chunk.js.map": "/fcc_frontendlibs_project4/static/js/787.4931ef9a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.40ca3353.css",
+    "static/js/main.da443409.js"
+  ]
+}
